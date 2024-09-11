@@ -20,7 +20,4 @@ EffectivePostmark.setup do |config|
   # config.mailer_sender = nil      # Default From value
   # config.mailer_admin = nil       # Default To value for Admin correspondence
   # config.mailer_subject = nil     # Proc.new method used to customize Subject
-
-  config.mailer_sender = 'errors@codeandeffect.com'
-
 end

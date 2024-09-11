@@ -10,9 +10,7 @@ module Effective
       subject = subject_for(__method__, 'Email Reactivated', resource, opts)
       headers = headers_for(resource, opts)
 
-      to = [resource.email, resource.try(:alternate_email).presence].compact
-
-      mail(to: to, subject: subject, **headers)
+      mail(to: resource.email, subject: subject, **headers)
     end
 
   end

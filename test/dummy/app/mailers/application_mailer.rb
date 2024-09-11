@@ -4,7 +4,7 @@ class ApplicationMailer < ActionMailer::Base
 
   def welcome(user, opts = {})
     @user = user
-    mail(to: user.email, from: 'errors@codeandeffect.com', subject: 'Welcome')
+    mail(to: user.email, from: EffectivePostmark.mailer_sender, subject: 'Welcome')
   end
 
 end

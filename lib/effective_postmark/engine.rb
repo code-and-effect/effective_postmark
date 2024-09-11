@@ -7,7 +7,7 @@ module EffectivePostmark
       eval File.read("#{config.root}/config/effective_postmark.rb")
     end
 
-    # Include acts_as_addressable concern and allow any ActiveRecord object to call it
+    # Include effective_postmark_user concern and allow any ActiveRecord object to call it
     initializer 'effective_postmark.active_record' do |app|
       app.config.to_prepare do
         ActiveRecord::Base.extend(EffectivePostmarkUser::Base)
