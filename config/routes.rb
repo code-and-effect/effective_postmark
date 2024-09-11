@@ -1,6 +1,14 @@
 EffectivePostmark::Engine.routes.draw do
   namespace :admin do
-    resources :postmark, only: [:index]
+    resources :postmark, only: [] do
+      post :postmark_reactivate, on: :member
+    end
+
+    resources :postmark_reports, only: [] do
+      collection do
+        get :inactive_recipients
+      end
+    end
   end
 end
 

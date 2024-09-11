@@ -1,11 +1,8 @@
-
 # Effective Postmark
 
-A mailer concern to capture `Postmark::InvalidRecipientError` and mark users as bounced.
+A mailer concern to capture `Postmark::InactiveRecipientError` and mark users as bounced.
 
-Uses the postmark API to resubscribe users.
-
-Reports for all bounced users
+Uses the postmark API to reactivate users. Includes a datatable report of all inactive users.
 
 ## effective_postmark 1.0
 
@@ -18,7 +15,7 @@ This requires Twitter Bootstrap 4.
 Add to your Gemfile:
 
 ```ruby
-gem 'haml-rails' # or try using gem 'hamlit-rails'
+gem 'haml-rails'
 gem 'effective_postmark'
 ```
 
@@ -28,15 +25,24 @@ Run the bundle command to install it:
 bundle install
 ```
 
-Then run the generator:
+Add the following to your user model:
 
 ```ruby
-rails generate effective_postmark:install
+class User
+  effective_postmark_user
+end
 ```
 
-The generator will install an initializer which describes all configuration options and creates a database migration.
+And add two database fields to your user model:
 
-If you want to tweak the table name (to use something other than the default 'postmark'), manually adjust both the configuration file and the migration now.
+```ruby
+class AddEffectivePostmarkFieldsToUsers < ActiveRecord::Migration[7.0]
+  def change
+    add_column :users, :postmark_error, :string
+    add_column :users, :postmark_error_at, :datetime
+  end
+end
+```
 
 Then migrate the database:
 
@@ -44,29 +50,53 @@ Then migrate the database:
 rake db:migrate
 ```
 
-And import the provided welcome email template:
-
-```ruby
-rake effective_postmark:import
-```
-
 ## Admin View
 
-To manage the content of the email templates, navigate to `/admin/postmark` or add,
+To add an admin alert when the user has been marked inactive with a link to reactivate
 
-`link_to 'Postmark', effective_postmark.admin_postmark_path` to your menu.
+```ruby
+= effective_postmark_admin_alert(current_user, from: 'My Site')
+```
 
-## Authorization
+## Dashboard View
 
-All authorization checks are handled via the effective_resources gem found in the `config/initializers/effective_resources.rb` file.
+To add an alert when the user has been marked inactive
 
+```ruby
+= effective_postmark_alert(current_user, from: 'My Site')
+```
+
+## Devise Password Reset
+
+If you want to include the inactive alert on the devise reset password page:
+
+```ruby
+class Users::PasswordsController < Devise::PasswordsController
+  after_action(only: :create) do
+    if resource.try(:postmark_invalid?)
+      flash.delete(:notice)
+      flash[:danger] = view_context.effective_postmark_alert(resource, from: 'MyARTA', html_class: '')
+    end
+  end
+end
+```
+
+## Inactive Recipients Report
+
+Add a link to the admin report:
+
+```ruby
+= nav_link_to 'Inactive Recipients', effective_postmark.inactive_recipients_admin_postmark_reports_path
+```
 
 ### Permissions
 
-To allow a user to see the admin area, using CanCan:
+Give the following permissions to your admin user:
 
 ```ruby
 can :admin, :effective_postmark
+can(:postmark_reactivate, User) { |user| user.postmark_invalid? }
+can(:index, Admin::ReportInactiveRecipientsDatatable)
 ```
 
 ## License

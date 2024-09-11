@@ -4,6 +4,7 @@ PATH
     effective_postmark (0.1.0)
       effective_bootstrap
       effective_datatables (>= 4.0.0)
+      effective_logging
       effective_resources
       postmark-rails
       rails
@@ -108,6 +109,10 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    dotenv (3.1.0)
+    dotenv-rails (3.1.0)
+      dotenv (= 3.1.0)
+      railties (>= 6.1)
     effective_bootstrap (1.14.11)
       bootstrap (< 5)
       coffee-rails
@@ -126,9 +131,16 @@ GEM
     effective_developer (0.7.8)
       effective_resources
       rails (>= 3.2.0)
-    effective_resources (2.15.0)
+    effective_logging (4.3.0)
+      coffee-rails
+      devise
+      effective_datatables
+      effective_resources
       rails (>= 4.0.0)
-    effective_test_bot (1.4.0)
+    effective_resources (2.25.14)
+      rails
+      sprockets-rails
+    effective_test_bot (1.5.13)
       capybara
       effective_resources
       faker
@@ -287,6 +299,7 @@ PLATFORMS
 
 DEPENDENCIES
   devise
+  dotenv-rails
   effective_developer
   effective_postmark!
   effective_test_bot

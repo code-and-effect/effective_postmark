@@ -21,6 +21,10 @@ class CreateUsers < ActiveRecord::Migration[6.0]
       t.string    :last_name
       t.integer   :roles_mask
 
+      # Effective Postmark fields
+      t.string    :postmark_error
+      t.datetime  :postmark_error_at
+
       t.timestamps
     end
 

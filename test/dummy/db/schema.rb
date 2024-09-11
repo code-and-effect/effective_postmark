@@ -50,6 +50,44 @@ ActiveRecord::Schema.define(version: 101) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "logs", force: :cascade do |t|
+    t.string "status"
+    t.string "user_type"
+    t.integer "user_id"
+    t.string "changes_to_type"
+    t.integer "changes_to_id"
+    t.string "associated_type"
+    t.integer "associated_id"
+    t.string "associated_to_s"
+    t.text "message"
+    t.text "details"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["associated_to_s"], name: "index_logs_on_associated_to_s"
+    t.index ["associated_type", "associated_id"], name: "index_logs_on_associated_type_and_associated_id"
+    t.index ["changes_to_type", "changes_to_id"], name: "index_logs_on_changes_to_type_and_changes_to_id"
+    t.index ["details"], name: "index_logs_on_details"
+    t.index ["id"], name: "index_logs_on_id", order: :desc
+    t.index ["message"], name: "index_logs_on_message"
+    t.index ["status"], name: "index_logs_on_status"
+    t.index ["updated_at"], name: "index_logs_on_updated_at"
+    t.index ["user_id"], name: "index_logs_on_user_id"
+  end
+
+  create_table "tracks", force: :cascade do |t|
+    t.string "owner_type"
+    t.integer "owner_id"
+    t.string "user_type"
+    t.integer "user_id"
+    t.string "action"
+    t.string "title"
+    t.text "details"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["owner_id"], name: "index_tracks_on_owner_id"
+    t.index ["user_id"], name: "index_tracks_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -67,6 +105,8 @@ ActiveRecord::Schema.define(version: 101) do
     t.string "first_name"
     t.string "last_name"
     t.integer "roles_mask"
+    t.string "postmark_error"
+    t.datetime "postmark_error_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
