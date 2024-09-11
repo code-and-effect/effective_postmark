@@ -9,6 +9,7 @@ module EffectivePostmarkMailer
       end
     end
 
+    rescue_from ::StandardError, with: :effective_postmark_error
     rescue_from ::Postmark::InactiveRecipientError, with: :effective_postmark_inactive_recipient_error
   end
 
@@ -36,6 +37,10 @@ module EffectivePostmarkMailer
       ::EffectiveLogger.email("[ERROR] Inactive Recipient - #{email}", user: user, error_code: exception.error_code, message: exception.message)
     end
 
+    true
+  end
+
+  def effective_postmark_error(exception)
     true
   end
 

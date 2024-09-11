@@ -67,4 +67,14 @@ class PostmarkTest < ActiveSupport::TestCase
     log = Effective::Log.where(status: :email, user: user, message: "[ERROR] Inactive Recipient - #{user.email}").first
     assert log.present?
   end
+
+  test 'exception email from postmark' do
+    user = build_user()
+    user.update!(email: 'InboundError@bounce-testing.postmarkapp.com')
+
+    message = ApplicationMailer.welcome(user).deliver_now
+    assert message.kind_of?(Mail::Message)
+
+    assert user.postmark_valid?
+  end
 end
