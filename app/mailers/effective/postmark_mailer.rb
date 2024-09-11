@@ -7,7 +7,7 @@ module Effective
       raise('expected an effective_postmark_user') unless resource.class.try(:effective_postmark_user?)
 
       @user = resource
-      subject = subject_for(__method__, 'Email Reactivated', resource, opts)
+      subject = subject_for(__method__, 'Your email address has been reactivated', resource, opts)
       headers = headers_for(resource, opts)
 
       mail(to: resource.email, subject: subject, **headers)

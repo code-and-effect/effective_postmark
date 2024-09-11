@@ -39,6 +39,18 @@ class PostmarkTest < ActiveSupport::TestCase
     assert user.postmark_valid?
   end
 
+  test 'changing user email' do
+    user = build_user()
+    user.save!
+
+    # Mark inactive
+    user.postmark_inactive_recipient!
+    assert user.postmark_invalid?
+
+    user.update!(email: 'another@example.com')
+    assert user.postmark_valid?
+  end
+
   test 'bounced email from postmark' do
     user = build_user()
     user.update!(email: 'test@bounce-testing.postmarkapp.com')

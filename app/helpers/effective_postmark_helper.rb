@@ -29,7 +29,7 @@ module EffectivePostmarkHelper
         "They will not receive any emails",
         ("from #{from}" if from),
         "while inactive.",
-        "Please contact the member and update their email address, or" +
+        "Please update their email address, or" +
         link_to('reactivate their email', effective_postmark.postmark_reactivate_admin_postmark_path(user), 'data-method': :post),
         "and automatically attempt an email delivery."
       ].compact.join(' ').html_safe

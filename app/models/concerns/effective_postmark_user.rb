@@ -19,6 +19,10 @@ module EffectivePostmarkUser
       postmark_error_at   :datetime
     end
 
+    before_validation(if: -> { email_changed? && postmark_invalid? }) do
+      assign_attributes(postmark_error: nil, postmark_error_at: nil)
+    end
+
     scope :postmark_inactive_recipients, -> { where.not(postmark_error_at: nil) }
   end
 
