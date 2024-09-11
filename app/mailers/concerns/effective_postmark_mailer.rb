@@ -3,13 +3,13 @@ module EffectivePostmarkMailer
 
   included do
     # Make sure config.action_mailer.raise_delivery_errors = true
-    before_action do
+    before_action(unless: -> { Rails.env.test? || Rails.env.development? }) do
       unless (Rails.application.config.action_mailer.raise_delivery_errors rescue false)
         raise("Expected config.action_mailer.raise_delivery_errors to be true. Please update your environment for use with effective_postmark.")
       end
     end
 
-    rescue_from Postmark::InactiveRecipientError, with: :effective_postmark_inactive_recipient_error
+    rescue_from ::Postmark::InactiveRecipientError, with: :effective_postmark_inactive_recipient_error
   end
 
   def effective_postmark_inactive_recipient_error(exception)
