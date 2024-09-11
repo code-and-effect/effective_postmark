@@ -2,21 +2,9 @@ class ApplicationMailer < ActionMailer::Base
   include EffectiveMailer
   include EffectivePostmarkMailer
 
-  def welcome(resource, opts = {})
-    @assigns = assigns_for(resource)
-    mail(to: resource.email, **headers_for(resource, opts))
-  end
-
-  def assigns_for(user)
-    raise('expected a User') unless user.kind_of?(User)
-
-    values = {
-      email: user.email,
-      first_name: user.first_name,
-      last_name: user.last_name
-    }
-
-    { user: values }
+  def welcome(user, opts = {})
+    @user = user
+    mail(to: user.email, from: 'errors@codeandeffect.com', subject: 'Welcome')
   end
 
 end

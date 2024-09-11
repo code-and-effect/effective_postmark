@@ -1,7 +1,7 @@
 
 # Effective Postmark
 
-A mailer concern to capture `Postmark::InvalidRecipientError` and mark users as bounced.
+A mailer concern to capture `Postmark::InactiveRecipientError` and mark users as bounced.
 
 Uses the postmark API to resubscribe users.
 

@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = ['Code and Effect']
   s.email       = ['info@codeandeffect.com']
   s.homepage    = 'https://github.com/code-and-effect/effective_postmark'
-  s.summary     = 'Effective Postmark captures Postmark::InvalidRecipientError and marks users as bounced'
-  s.description = 'Effective Postmark captures Postmark::InvalidRecipientError and marks users as bounced'
+  s.summary     = 'Effective Postmark captures Postmark::InvalidRecipientError and marks Users as bounced'
+  s.description = 'Effective Postmark captures Postmark::InvalidRecipientError and marks Users as bounced'
   s.licenses    = ['MIT']
 
   s.files       = Dir["{app,config,db,lib}/**/*"] + ['MIT-LICENSE', 'README.md']
@@ -20,10 +20,12 @@ Gem::Specification.new do |s|
   s.add_dependency 'postmark-rails'
   s.add_dependency 'effective_bootstrap'
   s.add_dependency 'effective_datatables', '>= 4.0.0'
+  s.add_dependency 'effective_logging'
   s.add_dependency 'effective_resources'
 
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'devise'
+  s.add_development_dependency 'dotenv-rails'
   s.add_development_dependency 'haml'
   s.add_development_dependency 'pry-byebug'
   s.add_development_dependency 'effective_test_bot'

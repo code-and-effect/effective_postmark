@@ -5,15 +5,12 @@ module Admin
 
     include Effective::CrudController
 
-    if (config = EffectivePostmark.layout)
-      layout(config.kind_of?(Hash) ? config[:admin] : config)
-    end
+    resource_scope -> { current_user.class.all }
 
-    submit :save, 'Save'
-    submit :save, 'Save and Add New', redirect: :new
+    on :postmark_reactivate, success: -> { "Successfully reactivated and sent an email to #{resource.email}" }
 
-    def email_template_params
-      params.require(:effective_email_template).permit!
+    def permitted_params
+      params.require(:user).permit!
     end
 
   end
