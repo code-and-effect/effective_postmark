@@ -4,7 +4,7 @@ EffectivePostmark.setup do |config|
   # config.layout = { application: 'application', admin: 'admin' }
 
   # API Key
-  config.api_token = ENV.fetch('POSTMARK_API_TOKEN')
+  # config.api_token = ENV.fetch('POSTMARK_API_TOKEN')
 
   # Mailer Settings
   # Please see config/initializers/effective_resources.rb for default effective_* gem mailer settings

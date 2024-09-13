@@ -9,8 +9,23 @@ module EffectivePostmarkMailer
       end
     end
 
-    rescue_from ::StandardError, with: :effective_postmark_error
-    rescue_from ::Postmark::InactiveRecipientError, with: :effective_postmark_inactive_recipient_error
+    rescue_from(::StandardError, with: :effective_postmark_error) unless Rails.env.test? || Rails.env.development?
+    rescue_from(::Postmark::InactiveRecipientError, with: :effective_postmark_inactive_recipient_error)
+  end
+
+  module ClassMethods
+    def postmark_settings
+      tenant = if defined?(Tenant)
+        Tenant.current || raise("Missing tenant in effective_postmark postmark_settings")
+      end
+
+      api_token = EffectivePostmark.api_token.presence || begin
+        raise("Missing effective_postmark api_token for tenant :#{tenant}. Please see config/initializers/effective_postmark.rb") if tenant.present?
+        raise("Missing effective_postmark api_token. Please see config/initializers/effective_postmark.rb")
+      end
+
+      { api_token: api_token }
+    end
   end
 
   def effective_postmark_inactive_recipient_error(exception)
@@ -41,6 +56,9 @@ module EffectivePostmarkMailer
   end
 
   def effective_postmark_error(exception)
+    Rails.logger.info "\e[31m\e[1mEMAIL FAILED\e[0m\e[22m" # bold red
+    Rails.logger.info "#{exception.inspect}"
+
     true
   end
 
