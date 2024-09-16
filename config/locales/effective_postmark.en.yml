@@ -1,0 +1,8 @@
+en:
+  effective_postmark:
+    name: 'Effective Postmark'
+    acronym: 'Postmark'
+
+  datatables:
+    admin/report_inactive_recipients_datatable: 'Report: Inactive Recipients'
+
