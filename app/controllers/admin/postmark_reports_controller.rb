@@ -5,8 +5,8 @@ module Admin
 
     include Effective::CrudController
 
-    def inactive_recipients
-      @datatable = Admin::ReportInactiveRecipientsDatatable.new
+    def email_delivery_errors
+      @datatable = Admin::ReportEmailDeliveryErrorsDatatable.new
       @page_title = @datatable.datatable_name
 
       authorize! :index, @datatable

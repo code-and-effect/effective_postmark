@@ -25,18 +25,18 @@ class PostmarkTest < ActiveSupport::TestCase
     user = build_user()
     user.save!
 
-    assert user.postmark_valid?
+    assert user.email_delivery_error.blank?
 
     # Mark inactive
     user.postmark_inactive_recipient!
 
-    assert user.postmark_invalid?
-    assert_equal 'Inactive Recipient', user.postmark_error
-    assert user.postmark_error_at.present?
+    assert user.email_delivery_error.present?
+    assert_equal 'Inactive Recipient', user.email_delivery_error
+    assert user.email_delivery_error_at.present?
 
     # Mark active again
     user.postmark_reactivate!
-    assert user.postmark_valid?
+    assert user.email_delivery_error.blank?
   end
 
   test 'changing user email' do
@@ -45,10 +45,10 @@ class PostmarkTest < ActiveSupport::TestCase
 
     # Mark inactive
     user.postmark_inactive_recipient!
-    assert user.postmark_invalid?
+    assert user.email_delivery_error.present?
 
     user.update!(email: 'another@example.com')
-    assert user.postmark_valid?
+    assert user.email_delivery_error.blank?
   end
 
   test 'bounced email from postmark' do
@@ -60,9 +60,9 @@ class PostmarkTest < ActiveSupport::TestCase
 
     user.reload
 
-    assert user.postmark_invalid?
-    assert_equal 'Inactive Recipient', user.postmark_error
-    assert user.postmark_error_at.present?
+    assert user.email_delivery_error.present?
+    assert_equal 'Inactive Recipient', user.email_delivery_error
+    assert user.email_delivery_error_at.present?
 
     log = Effective::Log.where(status: :email, user: user, message: "[ERROR] Inactive Recipient - #{user.email}").first
     assert log.present?
@@ -75,6 +75,6 @@ class PostmarkTest < ActiveSupport::TestCase
     message = ApplicationMailer.welcome(user).deliver_now
     assert message.kind_of?(Mail::Message)
 
-    assert user.postmark_valid?
+    assert user.email_delivery_error.blank?
   end
 end

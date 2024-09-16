@@ -15,15 +15,16 @@ module EffectivePostmarkUser
 
   included do
     effective_resource do
-      postmark_error      :string
-      postmark_error_at   :datetime
+      email_delivery_error      :string
+      email_delivery_error_at   :datetime
     end
 
-    before_validation(if: -> { email_changed? && postmark_invalid? }) do
-      assign_attributes(postmark_error: nil, postmark_error_at: nil)
+    # Clear any email errors if they change their email
+    before_validation(if: -> { email_changed? && email_delivery_error.present? }) do
+      assign_attributes(email_delivery_error: nil, email_delivery_error_at: nil)
     end
 
-    scope :postmark_inactive_recipients, -> { where.not(postmark_error_at: nil) }
+    scope :with_email_delivery_errors, -> { where.not(email_delivery_error: nil) }
   end
 
   module ClassMethods
@@ -32,9 +33,9 @@ module EffectivePostmarkUser
 
   # Triggered by the EffectivePostmarkMailer concern when a Postmark::InactiveRecipientError is raised
   def postmark_inactive_recipient!
-    return unless postmark_valid? # If we already marked invalid, don't mark again
+    return if email_delivery_error.present? # If we already marked invalid, don't mark again
 
-    update_columns(postmark_error: 'Inactive Recipient', postmark_error_at: Time.zone.now)
+    update_columns(email_delivery_error: 'Inactive Recipient', email_delivery_error_at: Time.zone.now)
   end
 
   # Triggered by an admin to reactivate the email address
@@ -48,15 +49,7 @@ module EffectivePostmarkUser
     return false if message.kind_of?(Exception)
 
     # This worked. We've been reactivated. Clear the error
-    update_columns(postmark_error: nil, postmark_error_at: nil)
-  end
-
-  def postmark_valid?
-    postmark_error.blank?
-  end
-
-  def postmark_invalid?
-    postmark_error.present?
+    update_columns(email_delivery_error: nil, email_delivery_error_at: nil)
   end
 
 end

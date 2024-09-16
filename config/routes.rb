@@ -6,7 +6,7 @@ EffectivePostmark::Engine.routes.draw do
 
     resources :postmark_reports, only: [] do
       collection do
-        get :inactive_recipients
+        get :email_delivery_errors
       end
     end
   end
