@@ -4,5 +4,5 @@ en:
     acronym: 'Postmark'
 
   datatables:
-    admin/report_inactive_recipients_datatable: 'Report: Inactive Recipients'
+    admin/report_email_delivery_errors_datatable: 'Report: Email Delivery Errors'
 
