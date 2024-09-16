@@ -1,7 +1,6 @@
 # Postmark: Inactive Recipients
-
 module Admin
-  class ReportInactiveRecipientsDatatable < Effective::Datatable
+  class ReportEmailDeliveryErrorsDatatable < Effective::Datatable
     datatable do
       col :id, visible: false
 
@@ -16,8 +15,8 @@ module Admin
       col :first_name, visible: false
       col :last_name, visible: false
 
-      col :postmark_error
-      col :postmark_error_at
+      col :email_delivery_error
+      col :email_delivery_error_at
 
       actions_col(actions: []) do |user|
         dropdown_link_to('Reactivate', effective_postmark.postmark_reactivate_admin_postmark_path(user), remote: true, method: :post)
@@ -26,7 +25,7 @@ module Admin
     end
 
     collection do
-      current_user.class.postmark_inactive_recipients
+      current_user.class.with_email_delivery_errors
     end
   end
 end

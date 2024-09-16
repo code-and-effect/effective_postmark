@@ -38,8 +38,8 @@ And add two database fields to your user model:
 ```ruby
 class AddEffectivePostmarkFieldsToUsers < ActiveRecord::Migration[7.0]
   def change
-    add_column :users, :postmark_error, :string
-    add_column :users, :postmark_error_at, :datetime
+    add_column :users, :email_delivery_error, :string
+    add_column :users, :email_delivery_error_at, :datetime
   end
 end
 ```
@@ -73,9 +73,9 @@ If you want to include the inactive alert on the devise reset password page:
 ```ruby
 class Users::PasswordsController < Devise::PasswordsController
   after_action(only: :create) do
-    if resource.try(:postmark_invalid?)
+    if resource.email_delivery_error.present?
       flash.delete(:notice)
-      flash[:danger] = view_context.effective_postmark_alert(resource, from: 'MyARTA', html_class: '')
+      flash[:danger] = view_context.effective_postmark_alert(resource, from: 'My Site', html_class: '')
     end
   end
 end
@@ -86,7 +86,7 @@ end
 Add a link to the admin report:
 
 ```ruby
-= nav_link_to 'Inactive Recipients', effective_postmark.inactive_recipients_admin_postmark_reports_path
+= nav_link_to 'Email Delivery Errors', effective_postmark.email_delivery_errors_admin_postmark_reports_path
 ```
 
 ### Permissions
@@ -95,8 +95,8 @@ Give the following permissions to your admin user:
 
 ```ruby
 can :admin, :effective_postmark
-can(:postmark_reactivate, User) { |user| user.postmark_invalid? }
-can(:index, Admin::ReportInactiveRecipientsDatatable)
+can(:postmark_reactivate, User) { |user| user.email_delivery_error.present? }
+can(:index, Admin::ReportEmailDeliveryErrorsDatatable)
 ```
 
 ## License

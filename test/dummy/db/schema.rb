@@ -105,8 +105,8 @@ ActiveRecord::Schema.define(version: 101) do
     t.string "first_name"
     t.string "last_name"
     t.integer "roles_mask"
-    t.string "postmark_error"
-    t.datetime "postmark_error_at"
+    t.string "email_delivery_error"
+    t.datetime "email_delivery_error_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_users_on_email", unique: true

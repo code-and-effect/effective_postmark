@@ -3,7 +3,7 @@ module EffectivePostmarkHelper
   # For use on the regular user alerts and forgot password pages
   def effective_postmark_alert(user, from: nil, html_class: 'alert alert-danger mb-4')
     raise('expected an effective_postmark_user') unless user.class.try(:effective_postmark_user?)
-    return unless user.postmark_invalid?
+    return unless user.email_delivery_error.present?
 
     content_tag(:div, class: html_class) do
       [
@@ -21,7 +21,7 @@ module EffectivePostmarkHelper
   # For use on the admin/users#edit page
   def effective_postmark_admin_alert(user, from: nil, html_class: 'alert alert-danger mb-4')
     raise('expected an effective_postmark_user') unless user.class.try(:effective_postmark_user?)
-    return unless user.postmark_invalid?
+    return unless user.email_delivery_error.present?
 
     content_tag(:div, class: html_class) do
       [
