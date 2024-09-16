@@ -3,6 +3,8 @@ module Admin
     before_action(:authenticate_user!) if defined?(Devise)
     before_action { EffectiveResources.authorize!(self, :admin, :effective_postmark) }
 
+    include Effective::CrudController
+
     def inactive_recipients
       @datatable = Admin::ReportInactiveRecipientsDatatable.new
       @page_title = @datatable.datatable_name
