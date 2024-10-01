@@ -9,7 +9,7 @@ module EffectivePostmarkMailer
       end
     end
 
-    rescue_from(::StandardError, with: :effective_postmark_error) unless Rails.env.test? || Rails.env.development?
+    #rescue_from(::StandardError, with: :effective_postmark_error)
     rescue_from(::Postmark::InactiveRecipientError, with: :effective_postmark_inactive_recipient_error)
   end
 
@@ -58,6 +58,11 @@ module EffectivePostmarkMailer
   def effective_postmark_error(exception)
     Rails.logger.info "\e[31m\e[1mEMAIL FAILED\e[0m\e[22m" # bold red
     Rails.logger.info "#{exception.inspect}"
+
+    EffectiveLogger.error(exception.message) if defined?(EffectiveLogger)
+    ExceptionNotifier.notify_exception(exception) if defined?(ExceptionNotifier)
+
+    raise(exception) if Rails.env.test? || Rails.env.development?
 
     true
   end
