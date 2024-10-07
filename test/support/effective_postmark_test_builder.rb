@@ -8,7 +8,7 @@ module EffectivePostmarkTestBuilder
     @user_index += 1
 
     User.new(
-      email: "user#{@user_index}@example.com",
+      email: "user#{@user_index}@codeandeffect.com",
       password: 'rubicon2020',
       password_confirmation: 'rubicon2020',
       first_name: 'Test',

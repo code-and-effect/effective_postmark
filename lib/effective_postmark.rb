@@ -18,6 +18,10 @@ module EffectivePostmark
     Effective::PostmarkApi.new(api_token: api_token)
   end
 
+  def self.api_present?
+    api_token.present?
+  end
+
   def self.mailer_class
     mailer&.constantize || Effective::PostmarkMailer
   end
