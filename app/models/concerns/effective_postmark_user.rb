@@ -38,6 +38,15 @@ module EffectivePostmarkUser
     update_columns(email_delivery_error: 'Inactive Recipient', email_delivery_error_at: Time.zone.now)
   end
 
+  # Assigned by the rake task effective_postmark:assign_email_delivery_errors
+  def postmark_suppression!(reason:, date:)
+    return if email_delivery_error.present? # If we already marked invalid, don't mark again
+
+    date = (Time.zone.parse(date) rescue Time.zone.now) if date.kind_of?(String)
+
+    update_columns(email_delivery_error: reason, email_delivery_error_at: date)
+  end
+
   # Triggered by an admin to reactivate the email address
   def postmark_reactivate!
     # Make an API request to reactivate this user
