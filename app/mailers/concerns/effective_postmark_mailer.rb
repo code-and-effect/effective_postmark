@@ -60,7 +60,7 @@ module EffectivePostmarkMailer
     Rails.logger.info "#{exception.inspect}"
 
     EffectiveLogger.error(exception.message) if defined?(EffectiveLogger)
-    ExceptionNotifier.notify_exception(exception) if defined?(ExceptionNotifier)
+    EffectiveResources.send_error(exception)
 
     raise(exception) if Rails.env.test? || Rails.env.development?
 
