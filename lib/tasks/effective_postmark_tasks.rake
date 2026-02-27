@@ -15,7 +15,7 @@ namespace :effective_postmark do
       begin
         api.assign_email_delivery_errors!(klass)
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e) if defined?(ExceptionNotifier)
+        EffectiveResources.send_error(e)
         puts "Error with effective_postmark:assign_email_delivery_errors"
       end
     end
